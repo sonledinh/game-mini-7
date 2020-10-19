@@ -1,34 +1,13 @@
-/* jQuery Slot Machine by Chris Clower */
-
-/*
-  Chances:
-  Singles, reel 1: club = 7/20, spade = 1/4, heart = 3/20, diamond = 3/20, star = 1/20, smiley = 1/20
-  Singles, reel 2: club = 7/20, heart = 6/20, smiley = 3/20, star = 1/10, spade = 1/10
-  Singles, reel 3: heart = 6/20, spade = 1/4, diamond = 1/4, smiley = 3/20, star = 1/20
-  Doubles, high to low: club (14), heart (9), spade (7), smiley(4), star (3)
-  Flushes, high to low: heart (15), spade (12), smiley (7), star (4)
-*/
-               // First reel               // Second reel            // Third reel
-
-
-// var club     = [[1, 7, 10, 13, 16, 19, 20], [4, 7, 10, 13, 20], [7, 10, 16, 20]];
-
-// var star     = [[2, 5, 11, 14, 17],                       [2, 8, 11, 14, 16, 19],                  [1, 8, 11, 14, 17]];
-
-// var spade    = [[3, 6, 9, 12, 15, 18],         [3, 6, 18],                  [3, 6, 9, 18]];
-
-// var heart    = [[4, 8],               [1, 5, 9, 12, 15, 17],   [2, 4, 5, 12, 13, 15, 19]];
-
-               
-var club     = [[16, 20], [6, 11, 17, 20], [2, 14, 20]];
-var star     = [[3, 7, 11, 17], [2, 5, 8, 15], [6, 10, 13, 19]];
-var spade    = [[4, 8, 13, 18], [1, 9, 14, 19], [4, 5, 15, 17]];
-var heart    = [[2, 6, 9, 14], [4, 10, 13], [1, 8, 9, 12, 16]]; 
-var voucher    = [[1, 5, 10, 12, 15, 19], [3, 7, 12, 16, 18], [3, 7, 11, 18]]; 
+            
+var club     = [[16, 20], [20], [14, 20]];
+var star     = [[12, 19], [1, 14], [3, 10]];
+var spade    = [[5, 11, 18], [2, 7, 11], [1, 4, 9, 13]];
+var heart    = [[4, 9, 17], [4, 6, 10, 18], [5, 8, 12]]; 
+var voucher    = [[1, 3, 8, 15], [5, 9, 13, 17], [2, 7, 11, 18]]; 
+var cls    = [[2, 7, 14], [15], [6, 15, 19]]; 
+var piz    = [[6, 10, 13], [3, 8, 12, 16, 19], [16, 17]]; 
 
 var cost     = 100;
-// var sScore   = 500;
-// var score    = 500; 
 var spinning = false;
 
 var message_spin = '';
@@ -37,7 +16,7 @@ var MersenneTwister = function(seed) {
   if (seed == undefined) {
     seed = new Date().getTime();
   }
-
+ 
   this.N = 624;
   this.M = 397;
   this.MATRIX_A   = 0x9908b0df;
@@ -120,43 +99,17 @@ function contains(stack, needle) {
 }
 
 function checkWin(picked) {
-  /*
-    clubs = 1 -> 777, star = 2 -> game, spade = 3 -> radio, heart = 4 -> spin
-
-    Winnings:
-    Flushes: clubs: = 777 -> 1.700.000 vnđ
-    Flushes: star: = game -> 700.000 vnđ
-    Flushes: spade: = radio -> 170.000 vnđ
-    Flushes: heart: = spin -> 70.000 vnđ
-    Flushes: clubs, star, spade: -> voucher
-
-  */
   var winnings = 0;
 
-  if (picked[0] === 1 && picked[1] === 2 && picked[2] === 3) { // heart flush
-    // winnings += cost * 20;
-    // alert("vocher");
-  }
+  if (picked[0] === 1 && picked[1] === 2 && picked[2] === 3) {}
 
-  if (picked[0] === 4 && picked[1] === 4 && picked[2] === 4) { // heart flush
-    // winnings += cost * 20;
-    // alert("70.000");
-  }
+  if (picked[0] === 4 && picked[1] === 4 && picked[2] === 4) {}
 
-  if (picked[0] === 3 && picked[1] === 3 && picked[2] === 3) { // spade flush
-    // winnings += cost * 20;
-    // alert("170.000");
-  }
+  if (picked[0] === 3 && picked[1] === 3 && picked[2] === 3) {}
 
-  if (picked[0] === 2 && picked[1] === 2 && picked[2] === 2) { // star flush
-    // winnings += cost * 20;
-    // alert("700.000");
-  }
+  if (picked[0] === 2 && picked[1] === 2 && picked[2] === 2) {}
 
-  if (picked[0] === 1 && picked[1] === 1 && picked[2] === 1) { // club flush
-    // winnings += cost * 20;
-    // alert("1.700.000");
-  }
+  if (picked[0] === 1 && picked[1] === 1 && picked[2] === 1) {}
  
   score += winnings;
   $('#winnings-1').text((winnings / 100));
@@ -173,7 +126,9 @@ function checkWin(picked) {
     });
   }
   $('.list-prize ul').prepend(message_spin);
-  swal('Thông báo', message_raw, 'success');
+  setTimeout(function(){
+    swal('Thông báo', message_raw, 'success');
+  }, 1000);
 }
 
 function spin(pick1, pick2, pick3, ) {
@@ -186,8 +141,12 @@ function spin(pick1, pick2, pick3, ) {
   var rand3 = Math.abs(pick3 * 150) * -1;
 
   var start1 = rand(0,   200);
-  var start2 = rand(200, 700);
-  var start3 = rand(600, 1000);
+  var start2 = rand(200, 400);
+  var start3 = rand(400, 600);
+
+  // var start1 = 0;
+  // var start2 = 0;
+  // var start3 = 0;
 
   var picked = [];
 
@@ -237,7 +196,7 @@ function spin(pick1, pick2, pick3, ) {
       });
     }, start3);
 
-    if (contains(club[0], pick1 + 1)) {
+    if (contains(club[0], pick1 + 1)) { 
       picked.push(1);
     } else if (contains(star[0], pick1 + 1)) {
       picked.push(2);
@@ -247,6 +206,10 @@ function spin(pick1, pick2, pick3, ) {
       picked.push(4);
     } else if (contains(voucher[0], pick1 + 1)) {
       picked.push(5);
+    } else if (contains(cls[0], pick1 + 1)) {
+      picked.push(6);
+    } else if (contains(piz[0], pick1 + 1)) {
+      picked.push(7);
     }
 
     if (contains(club[1], pick2 + 1)) {
@@ -259,6 +222,10 @@ function spin(pick1, pick2, pick3, ) {
       picked.push(4);
     } else if (contains(voucher[1], pick2 + 1)) {
       picked.push(5);
+    } else if (contains(cls[1], pick2 + 1)) {
+      picked.push(6);
+    } else if (contains(piz[1], pick2 + 1)) {
+      picked.push(7);
     }
 
     if (contains(club[2], pick3 + 1)) {
@@ -271,6 +238,10 @@ function spin(pick1, pick2, pick3, ) {
       picked.push(4);
     } else if (contains(voucher[2], pick3 + 1)) {
       picked.push(5);
+    } else if (contains(cls[2], pick3 + 1)) {
+      picked.push(6);
+    } else if (contains(piz[2], pick3 + 1)) { 
+      picked.push(7);
     }
   }
 }
